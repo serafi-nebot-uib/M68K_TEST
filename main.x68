@@ -16,6 +16,10 @@ start:
 
 .loop:
 ; --- update -------------------------------------------------------------------
+; read input devices
+		trap #1
+
+; update game logic
 		jsr		balupd
 		jsr		padupd
 
@@ -34,5 +38,6 @@ start:
 		bra		.loop
 
 		include	'vars.x68'
+		include	'sysvars.x68'
 
 		end		start

@@ -8,5 +8,5 @@ balvely:	ds.w	1								; ball y velocity
 padposy:	ds.w	1								; pad y coordinate
 
 ; --- scoreboard ---------------------------------------------------------------
-scoin:		ds.w	1								; number of balls captured balls
-scoout:		ds.w	1								; number of balls missed balls
+scoin:		ds.w	1								; number of captured balls
+scoout:		ds.w	1								; number of missed balls
