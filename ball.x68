@@ -16,16 +16,71 @@ balupd:
 ; ret: none
 ; mod: none
 ; ------------------------------------------------------------------------------
-		movem.l	d0-d1, -(a7)
+		movem.l	d0-d2, -(a7)
 
 		move.w	(balposx), d0
 		move.w	(balposy), d1
 		add.w	(balvelx), d0
 		add.w	(balvely), d1
+
+		; check pad collisions
+		cmp.w	#padposx+padwidth/2+balrad, d0
+		bgt		.chkhorz
+
+		move.w	(padposy), d2
+		sub.w	#padheight/2+balrad, d2
+		cmp.w	d2, d1
+		blt		.chkhorz
+		move.w	(padposy), d2
+		add.w	#padheight/2+balrad, d2
+		cmp.w	d2, d1
+		bgt		.chkhorz
+		neg.w	(balvelx)
+		move.w	#padposx+padwidth/2+balrad, d0
+		addq.w	#1, (scoin)
+		bra		.done
+
+.chkhorz:
+		; check horizontal collisions
+		cmp.w	#scrwidth-balrad, d0
+		bgt		.colrgt
+		cmp.w	#balrad, d0
+		blt		.collft
+		bra		.chkvert
+		
+.colrgt:
+		neg.w	(balvelx)
+		move.w	#scrwidth-balrad, d0
+		bra		.done
+.collft:
+		neg.w	(balvelx)
+		move.w	#scrwidth/2, d0
+		move.w	#scrheight/2, d1
+		addq.w	#1, (scoout)
+		bra		.done
+
+		; check vertical collisions
+.chkvert:
+		cmp.w	#scrheight-balrad, d1
+		bgt		.colbot
+		cmp.w	#balrad, d1
+		blt		.coltop
+		bra		.done
+
+.colbot:
+		neg.w	(balvely)
+		move.w	#scrheight-balrad, d1
+		bra		.done
+
+.coltop:
+		neg.w	(balvely)
+		move.w	#balrad, d1
+
+.done:
 		move.w	d0, (balposx)
 		move.w	d1, (balposy)
 
-		movem.l	(a7)+, d0-d1
+		movem.l	(a7)+, d0-d2
 		rts
 
 balplot:
